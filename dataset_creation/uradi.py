@@ -77,3 +77,9 @@ def make_poop(djubre):
         signal(i, 1)
 
     print("Done poop!")
+
+def make_test(ime, djubreRec):
+    for i in range(13, 18):
+        signal(ime + str(i), 0)
+    signal(djubreRec, 1)
+    print("Done Test!")

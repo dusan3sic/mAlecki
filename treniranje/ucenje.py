@@ -2,8 +2,8 @@ import numpy as np
 import dataset
 
 #load
-X, y = dataset.load_data("data")
+X, y, tX, ty = dataset.load_data("./data.csv")
 
 #normalize
-for i, x in enumerate(X): X[i] = dataset.normalize(x)
+# for i, x in enumerate(X): X[i] = dataset.normalize(x)
 

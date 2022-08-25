@@ -10,7 +10,12 @@ def load_data(file):
             row = list(map(int, row))
             y.append(row[0])
             x.append(row[1:])
-    return x, y
+
+    X = x[:10000]
+    Y = y[:10000]
+    tX = x[10000:]
+    tY = y[10000:]
+    return X, Y, tX, tY
 
 def normalize(x: np.ndarray) -> np.ndarray:
     return (x - x.min()) / (x.max() - x.min())
