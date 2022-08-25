@@ -34,8 +34,7 @@ def signal(fileName, a):
     if(a == 0): indexes = [i for i, x in enumerate(signal)]
     else: indexes = [200 for i in signal]
 
-    print(indexes)
-    pd.DataFrame(signal).to_csv("data", header=None, index=indexes, mode="a")
+    pd.DataFrame(signal, index=indexes).to_csv("./data", header=None, mode="a")
 
 def ret_speed():
     return np.array(
