@@ -21,5 +21,5 @@ def saveProcess(X, tX):
     tX = process(tX)
 
     pd.DataFrame(tX).to_csv("tX.csv", header=None, mode="w")
-    pd.DataFrame(tX).to_csv("X.csv", header=None, mode="w")
+    pd.DataFrame(X).to_csv("X.csv", header=None, mode="w")
 

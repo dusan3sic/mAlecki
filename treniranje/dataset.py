@@ -29,9 +29,8 @@ def load_processed(fileX, filetX):
 
     return X, tX
     
-
 def normalize(x: np.ndarray) -> np.ndarray:
-    if(x.min() == 0 and x.max() == 0): return x
+    if(x.min() == x.max()): return x
     return (x - x.min()) / (x.max() - x.min())
 
 def vectorize(y):
