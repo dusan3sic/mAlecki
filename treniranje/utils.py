@@ -15,7 +15,11 @@ def Softmax(data):
     return exps / sums
 
 def CELoss(y, yH): 
-    return -np.sum(y * np.log(1e15 + yH) ) / y.shape[0]
+    for i, x in enumerate(yH):
+        for j, c in enumerate(x):
+            yH[i][j] = max(1e-15, c)
+    
+    return -np.sum(y * np.log(yH)) / y.shape[0]
 
 def Randomize(X, y):
     index = np.arange(X.shape[0])

@@ -9,8 +9,6 @@ np.set_printoptions(threshold=1e20)
 #load
 X, y, tX, ty = dataset.load_data("./data.csv")
 
-print(X)
-
 #process
 X, tX = dataset.load_processed("X.csv", "tX.csv")
 
@@ -26,15 +24,15 @@ tX = np.array(tX)
 
 
 #init learn
-k = 1e-2
+k = 1e-1
 w1 = np.random.uniform(-10, 10, (13, 5)) * k
 b1 = np.random.uniform(-10, 10, (1, 5)) * k
 
 w2 = np.random.uniform(-10, 10, (5, 201)) * k
 b2 = np.random.uniform(-10, 10, (1, 201)) * k
 
-epoch = 1#int(1e2)
-lr = int(8e-1)
+epoch = int(1e2)
+lr = int(1e+0)
 
 L = []
 
@@ -43,7 +41,7 @@ for i in range(1, epoch + 1):
         print("iteracija ", i)
 
     #test   
-    X, y = utils.Randomize(X, y)
+    # X, y = utils.Randomize(X, y)
 
     # print("\nIDEGAS\n", X[:10])    
 
@@ -65,13 +63,18 @@ for i in range(1, epoch + 1):
     dw1 = X.transpose() @ dz1
     db1 = dz1.sum(axis=0)
 
+
+    # print("W: \n", w2[0])
+    # print("\nlr * dw2: \n", lr * dw2)
+    # print("\ndw2: \n", dw2)
+    # print("\nNESTO\n")
     w2 -= lr * dw2
     b2 -= lr * db2
 
     w1 -= lr * dw1
     b1 -= lr * db1
 
-# print("\nL: \n", len(L))
+print("\nL: \n", L)
 
 plt.plot(L)
-# plt.show()
+plt.show()
