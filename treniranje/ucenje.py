@@ -13,8 +13,8 @@ X, y, tX, ty = dataset.load_data("./data.csv")
 X, tX = dataset.load_processed("X.csv", "tX.csv")
 
 #normalize
-X = [dataset.normalize(x) for x in X]
-tX = [dataset.normalize(x) for x in tX]
+X = dataset.normalize(X)
+tX = dataset.normalize(tX)
 
 X = np.array(X)
 tX = np.array(tX)
@@ -32,7 +32,12 @@ w2 = np.random.uniform(-10, 10, (5, 201)) * k
 b2 = np.random.uniform(-10, 10, (1, 201)) * k
 
 epoch = int(1e2)
-lr = int(1e+0)
+lr = int(1e+1)
+mb = 10
+r = len(X) // mb
+
+lastD = [0, 0, 0, 0]
+alfa = 0.9
 
 L = []
 
@@ -40,41 +45,53 @@ for i in range(1, epoch + 1):
     if i % (epoch / 10) == 0:
         print("iteracija ", i)
 
-    #test   
-    # X, y = utils.Randomize(X, y)
+    X, y = utils.Randomize(X, y)
 
-    # print("\nIDEGAS\n", X[:10])    
+    for i in range(mb):
+        x = X[i * r:(i + 1) * r] 
+        yTemp = y[i * r:(i + 1) * r]
 
-    z1 = X @ w1 + b1
-    a1 = utils.ReLU(z1)
+        z1 = x @ w1 + b1
+        a1 = utils.ReLU(z1)
 
-    z2 = a1 @ w2 + b2
-    yH = utils.Softmax(z2)
+        z2 = a1 @ w2 + b2
+        yH = utils.Softmax(z2)
 
-    L.append(utils.CELoss(y, yH))
+        L.append(utils.CELoss(yTemp, yH))
 
-    #learn
-    dz2 = (yH - y) / y.shape[0]
-    dw2 = a1.transpose() @ dz2
-    db2 = dz2.sum(axis=0)
+        #learn
+        dz2 = (yH - yTemp) / yTemp.shape[0]
+        dw2 = a1.transpose() @ dz2
+        db2 = dz2.sum(axis=0)
 
-    da1 = dz2 @ w2.transpose()
-    dz1 = utils.dReLU(z1) * da1
-    dw1 = X.transpose() @ dz1
-    db1 = dz1.sum(axis=0)
+        da1 = dz2 @ w2.transpose()
+        dz1 = utils.dReLU(z1) * da1
+        dw1 = x.transpose() @ dz1
+        db1 = dz1.sum(axis=0)
 
 
-    # print("W: \n", w2[0])
-    # print("\nlr * dw2: \n", lr * dw2)
-    # print("\ndw2: \n", dw2)
-    # print("\nNESTO\n")
-    w2 -= lr * dw2
-    b2 -= lr * db2
+        w2 -= lr * dw2 - alfa * lastD[0]
+        lastD[0] = lr * dw2
 
-    w1 -= lr * dw1
-    b1 -= lr * db1
+        b2 -= lr * db2 - alfa * lastD[1]
+        lastD[1] = lr * db2
 
-print("\nL: \n", L)
+        w1 -= lr * dw1 - alfa * lastD[2]
+        lastD[2] = lr * dw1
+
+        b1 -= lr * db1 - alfa * lastD[3]
+        lastD[3] = lr * db1
+
+
+# print("\nL: \n", L)
+
+tz1 = tX @ w1 + b1
+ta1 = utils.ReLU(tz1)
+
+tz2 = ta1 @ w2 + b2
+tyh = utils.Softmax(tz2)
+
+print( np.sum( np.argmax( ty, axis=1 )==np.argmax( tyh, axis=1 ) )  / len(ty) * 100)
 
 plt.plot(L)
 plt.show()

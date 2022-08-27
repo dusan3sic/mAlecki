@@ -30,7 +30,7 @@ def load_processed(fileX, filetX):
     return X, tX
     
 def normalize(X: np.ndarray) -> np.ndarray:
-    return X - np.min(X, axis=0) / np.max(X, axis=0) - np.min(X, axis=0)
+    return (X - np.min(X, axis=0)) / (np.max(X, axis=0) - np.min(X, axis=0))
 
 def vectorize(y):
     vector_y = np.zeros((len(y), 201))
